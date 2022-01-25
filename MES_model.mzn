@@ -3,9 +3,10 @@ int: a = 0;
 int: b = 2;
 float: h = (b-a)/n;
 
-array[1..n,1..n] of var float: M;
-array[1..n] of var float: L;
-array[1..n] of var float: result;
+array[1..n+1,1..n+1] of var float: M;
+array[1..n+1] of var float: L;
+array[1..n+1] of var float: result;
+array[1..n+1] of var float: xs = [ h*(i-1)| i in 1..n+1];
 
 function var float: xi(var int: i) = (2*i)/n;
 
@@ -64,12 +65,12 @@ function var float: integralB(var float: a, var float: b, var int: i1, var int: 
         var float: mid1 = (a+1)/2;
         var float: move1 = (1-a)/2;
         var float: res1 = eiDir(i1,mid1-sqrt(3/5)*move1)*eiDir(i2,mid1-sqrt(3/5)*move1)*(5/9) + 
-                          eiDir(i1,mid1)*eiDir(i2,mid1)*(8/9) + 
+                          eiDir(i1,mid1)                *eiDir(i2,mid1)                *(8/9) + 
                           eiDir(i1,mid1+sqrt(3/5)*move1)*eiDir(i2,mid1+sqrt(3/5)*move1)*(5/9);
         var float: mid2 = (1+b)/2;
         var float: move2 = (b-1)/2;
         var float: res2 = eiDir(i1,mid2-sqrt(3/5)*move2)*eiDir(i2,mid2-sqrt(3/5)*move2)*(5/9) + 
-                          eiDir(i1,mid2)*eiDir(i2,mid2)*(8/9) + 
+                          eiDir(i1,mid2)                *eiDir(i2,mid2)                *(8/9) + 
                           eiDir(i1,mid2+sqrt(3/5)*move2)*eiDir(i2,mid2+sqrt(3/5)*move2)*(5/9);} in
                           move1*res1*3+move2*res2*5
                       else
@@ -77,7 +78,7 @@ function var float: integralB(var float: a, var float: b, var int: i1, var int: 
         var float: mid = (a+b)/2;
         var float: move = (b-a)/2;
         var float: res = eiDir(i1,mid-sqrt(3/5)*move)*eiDir(i2,mid-sqrt(3/5)*move)*(5/9) + 
-                         eiDir(i1,mid)*eiDir(i2,mid)*(8/9) + 
+                         eiDir(i1,mid)               *eiDir(i2,mid)               *(8/9) + 
                          eiDir(i1,mid+sqrt(3/5)*move)*eiDir(i2,mid+sqrt(3/5)*move)*(5/9);} in 
                          if a>=1 then move*res*5 else move*res*3 endif
         endif        
@@ -85,16 +86,21 @@ function var float: integralB(var float: a, var float: b, var int: i1, var int: 
 
 constraint M[1,1] = B(0,0);
 constraint M[1,2] = B(0,1);
-constraint forall(i,j in 2..n-1)(if i=j then M[i,i-1] = B(i-1,i-2) /\ M[i,i] = B(i-1,i-1) /\ M[i,i+1] = B(i-1,i) else if j<i-1 \/ j>i+1 then M[i,j]=0 endif endif);
-constraint M[n,n-1] = B(n-1,n-2);
-constraint M[n,n] = B(n-1,n-1);
+constraint forall(i,j in 2..n)
+(if i=j then M[i,i-1] = B(i-1,i-2) /\ 
+             M[i,i] = B(i-1,i-1) /\ 
+             M[i,i+1] = B(i-1,i) 
+        else if j<i-1 \/ j>i+1 then M[i,j]=0 endif endif);
+constraint M[n+1,n] = B(n,n+1-2);
+constraint M[n+1,n+1] = B(n,n);
 
-constraint forall(i in 1..n)(L[i]=-30*ei(i-1,0));
+constraint forall(i in 1..n+1)(L[i]=-30*ei(i-1,0));
 
 constraint forall(i in 1..n)(sum(j in 1..n)(M[i,j]*result[j])=L[i]);
 
 solve satisfy;
 
-output ["M = \n"] ++ [show(M[i,j]) ++ if j=n then "\n" else " || " endif | i, j in 1..n] ++ ["\n"] ++
-       ["L = " ++ show([L[i] | i in 1..n]) ++ ";\n"] ++ ["\n"] ++
-       ["result = " ++ show([result[i] | i in 1..n]) ++ ";\n"]
+output ["M = \n"] ++ [show(M[i,j]) ++ if j=n+1 then "\n" else " || " endif | i, j in 1..n+1] ++ ["\n"] ++
+       ["L = " ++ show([L[i] | i in 1..n+1]) ++ ";\n"] ++ ["\n"] ++
+       ["xs= " ++ show([xs[i] | i in 1..n+1]) ++ ";\n"] ++ ["\n"] ++
+       ["result = " ++ show([result[i] | i in 1..n+1]) ++ ";\n"]
