@@ -1,0 +1,5 @@
+output ((((["M = \n"]++[show(M[i,j])++if j==n then "\n" else " || " endif | i,j in 1..n, ])++["\n"])++[("L = "++show([L[i] | i in 1..n, ]))++";\n"])++["\n"])++[("result = "++show([result[i] | i in 1..n, ]))++";\n"];
+int: n = 100;
+array [1..n,1..n] of float: M;
+array [1..n] of float: L;
+array [1..n] of float: result;
