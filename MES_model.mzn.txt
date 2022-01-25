@@ -1,0 +1,27 @@
+int: n;
+int: a=0;
+int: b=2;
+float: h=(b-a)/n;
+
+array[n,n] of var float: M;
+array[n] of var float: L;
+array[n] of vat float: result;
+
+function var float: xi(var int: i) = (2*i)/n;
+
+function var float: ei(var int: i, var float: x) = 
+	if x>=xi(i-1) /\ x<=xi(i) /\ i-1>=0
+            	then (x-xi(i-1))/(xi(i)-xi(i-1))
+        	else	if x>=xi(i) /\ x<=xi(i+1)
+            		then (xi(i+1)-x)/(xi(i+1)-xi(i))
+		else 0
+		endif
+	endif
+
+function var float: B(var int: i1, var int: i2) = 
+	integral(i1,i2) - 3*ei(i1,0)*ei(i2,0);
+
+function var float: integral(var int: i1, var int: i2) = 
+	1
+
+constraint forall(i in 2..n-1)(M[i,i-1] = B(i-1,i-2) /\ M[i,i] = B(i-1,i-1) /\ M[i,i+1] = B(i-1,i));
