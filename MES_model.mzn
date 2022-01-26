@@ -91,10 +91,10 @@ constraint forall(i,j in 2..n)
              M[i,i] = B(i-1,i-1) /\ 
              M[i,i+1] = B(i-1,i) 
         else if j<i-1 \/ j>i+1 then M[i,j]=0 endif endif);
-constraint M[n+1,n] = B(n,n+1-2);
-constraint M[n+1,n+1] = B(n,n);
+constraint forall(i in 1..n+1)(M[n+1,i]=0);
 
-constraint forall(i in 1..n+1)(L[i]=-30*ei(i-1,0));
+constraint forall(i in 1..n)(L[i]=-30*ei(i-1,0));
+constraint L[n+1]=0;
 
 constraint forall(i in 1..n)(sum(j in 1..n)(M[i,j]*result[j])=L[i]);
 
