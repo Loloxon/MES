@@ -1,0 +1,1 @@
+Program napisano w języku Minizinc, z użyciem solvera Gurobi. Nie gwarantuje się poprawnego działania dla innych solverów.
