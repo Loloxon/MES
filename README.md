@@ -1,3 +1,5 @@
+Rozwiązanie poniższego równania metodą elementów skończonych.
+
 <img src="img/img1.jpg" style="zoom:67%;" />
 
 <img src="img/img2.jpg" style="zoom:67%;" />
