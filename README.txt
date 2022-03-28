@@ -1,4 +1,4 @@
-![alt text](https://github.com/Loloxon/MES/blob/main/img/img1.jpg)
+![alt text](https://github.com/Loloxon/MES/tree/main/img/img1.jpg)
 
 <img src="img/img1.jpg" style="zoom:67%;" />
 
